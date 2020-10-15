@@ -1,0 +1,3 @@
+/Users/loco/Desktop/Facultate/FLCD/Lab2/SymbolTable/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/loco/Desktop/Facultate/FLCD/Lab2/SymbolTable/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/loco/Desktop/Facultate/FLCD/Lab2/SymbolTable/cmake-build-debug/CMakeFiles/SymbolTable.dir
