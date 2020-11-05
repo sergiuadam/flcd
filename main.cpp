@@ -11,47 +11,62 @@ static inline void ltrim(std::string &s) {
         return !std::isspace(ch);
     }));
 }
-int main() {
+
+void readReservedWords() {
+    ifstream fin("tokens.txt");
+    string buffer;
+    char line[100];
+    while(fin.getline(line, 100)){
+        if(line[strlen(line)-1] == '\r') {
+            line[strlen(line)-1] = '\0';
+        }
+        reservedWords.emplace_back(string{line});
+    }
+}
+int main(int argc, char** argv) {
+    readReservedWords();
     SymbolTable * identifiers = new SymbolTable();
     SymbolTable * constants = new SymbolTable();
     PIF pif;
 
-    ifstream fin("prog.txt");
+    ifstream fin(argv[1]);
     int count = 1;
     char line[100];
     while (fin.getline(line, 100)) {
         string s {line};
         spacearize(s);
         ltrim(s);
-
         char * lineAsChar = const_cast<char*>(s.c_str());
         char * token = strtok(lineAsChar, " ");
         while(token != nullptr) {
+            if(token[strlen(token)-1] == '\r') {
+                token[strlen(token)-1] = token[strlen(token)];
+            }
             bool isOkay = false;
-            if(isReservedWord(token)) {
+            if(isReservedWord(token) && !isOkay) {
                 isOkay = true;
                 pif.insertToken(token, 0);
             }
-            if(isSeparator(token)) {
-                isOkay = true;
-                pif.insertToken(token, 0);
-
-            }
-            if(isOperator(token)) {
+            if(isSeparator(token) && !isOkay) {
                 isOkay = true;
                 pif.insertToken(token, 0);
 
             }
-            if(isConstant(token)) {
+            if(isOperator(token) && !isOkay) {
+                isOkay = true;
+                pif.insertToken(token, 0);
+
+            }
+            if(isConstant(token) && !isOkay) {
                 isOkay = true;
                 int index = constants->pos(token);
-                pif.insertToken(token, index);
+                pif.insertToken("_constant", index);
 
             }
-            if(isIdentifier(token)) {
+            if(isIdentifier(token) && !isOkay) {
                 isOkay = true;
                 int index = identifiers->pos(token);
-                pif.insertToken(token, index);
+                pif.insertToken("_identifier", index);
             }
             if(!isOkay) {
                 cout<<"LEXICAL ERROR AT LINE: " << count << " UNRECOGNIZED TOKEN " << token << endl;
@@ -61,5 +76,29 @@ int main() {
         count++;
     }
     fin.close();
+
+    //OUTPUT
+    ofstream fpif("pif.out");
+    for(auto pereche : pif.all) {
+        fpif<<pereche.first<<" "<<pereche.second<<endl;
+    }
+    fpif.close();
+
+    ofstream fsymbol("symbol.out");
+    for(auto entry : constants->table) {
+        Node * e = entry;
+        while(e != nullptr) {
+            fsymbol<<e->identifier<<" "<<e->index<<endl;
+            e = e->next;
+        }
+    }
+    for(auto entry : identifiers->table) {
+        Node * e = entry;
+        while(e != nullptr) {
+            fsymbol<<e->identifier<<" "<<e->index<<endl;
+            e = e->next;
+        }
+    }
+    fsymbol.close();
     return 0;
 }

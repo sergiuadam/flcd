@@ -8,22 +8,7 @@
 using namespace std;
 vector<string> separators = {",", ";", "(", ")", "{", "}", "[", "]"};
 vector<string> operators = {"<=", ">=", "<", ">", "=", "+", "-", "/", "*", "%"};
-vector<string> reservedWords = {"INTREG",
-                                "CARACTER",
-                                "INTERVAL",
-                                "ADEVAR",
-                                "ADEVARAT",
-                                "MINCIUNA",
-                                "BAGA",
-                                "READ_FROM_USER",
-                                "PRINT_TO_USER",
-                                "DECLAR",
-                                "DACA",
-                                "ATUNCI",
-                                "INCEPE_SMECHERIA",
-                                "GATA_SMECHERIA",
-                                "TARE",
-                                "DEFINITIE"};
+vector<string> reservedWords = {};
 enum Type{
     resW, oper, sep
 };
@@ -44,7 +29,7 @@ bool checkStrings(const string &token, Type t)  {
 }
 
 bool isConstant(string token) {
-    std::regex cifre("^[0-9]*$", std::regex_constants::ECMAScript | std::regex_constants::icase);
+    std::regex cifre("^[0-9]+(.[0-9]+)?$", std::regex_constants::ECMAScript | std::regex_constants::icase);
     std::regex caractereString("^(?:\".*\"$)$", std::regex_constants::ECMAScript | std::regex_constants::icase);
 
     if (std::regex_search(token, cifre)) {

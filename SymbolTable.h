@@ -12,6 +12,7 @@ struct Node {
 };
 
 class SymbolTable {
+public:
     vector<Node *> table;
 
     int hash(string identifier) {
@@ -22,7 +23,6 @@ class SymbolTable {
         return sum % 67;
     }
 
-public:
     SymbolTable() {
         for(int i = 0; i < 67; i++) {
             table.push_back(nullptr);
